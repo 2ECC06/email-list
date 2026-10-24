@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Email list</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="javascript/index.js" type="module"></script>
 </head>
 
 <body>
@@ -14,26 +16,26 @@
         <form>
             <label>
                 Name
-                <input type="text" name="" id="" />
+                <input type="text" name="name" id="name-input" />
             </label>
 
             <label>
                 Email
-                <input type="text" name="" id="" />
+                <input type="text" name="email" id="email-input" />
             </label>
 
-            <button type="submit">Add user</button>
+            <button id="add-user-btn" type="submit">Add user</button>
         </form>
     </section>
 
     <!-- User list section -->
-    <section>
+    <section id="user-list" class="display-none">
         <div>
             <h2>User List</h2>
             <div><span>2</span>users</div>
         </div>
 
-        <div>
+        <div class="info">
             <article>
                 <div>
                     <p>Harry</p>
