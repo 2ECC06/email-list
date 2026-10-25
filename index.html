@@ -21,7 +21,7 @@
 
             <label>
                 Email
-                <input type="text" name="email" id="email-input" />
+                <input type="email" name="email" id="email-input" />
             </label>
 
             <button id="add-user-btn" type="submit">Add user</button>
@@ -29,25 +29,30 @@
     </section>
 
     <!-- User list section -->
-    <section id="user-list" class="display-none">
+    <section id="user-list-section">
         <div>
             <h2>User List</h2>
-            <div><span>2</span>users</div>
+            <div>
+                <span id="user-count">0</span>
+                <span id="user-count-text">Users</span>
+            </div>
         </div>
 
-        <div class="info">
-            <article>
-                <div>
-                    <p>Harry</p>
-                    <p>harry@gmail.com</p>
-                </div>
+        <ul id="user-list" class="display-none">
+            <li>
+                <article>
+                    <div>
+                        <p class="name"></p>
+                        <p class="email"></p>
+                    </div>
 
-                <div>
-                    <button type="button">Edit</button>
-                    <button type="button">Delete</button>
-                </div>
-            </article>
-        </div>
+                    <div>
+                        <button type="button">Edit</button>
+                        <button type="button">Delete</button>
+                    </div>
+                </article>
+            </li>
+        </ul>
     </section>
 </body>
 

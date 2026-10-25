@@ -1,47 +1,97 @@
-import { getFromStorage } from "./utilities.js";
+import { getListFromStorage, userCountObj } from "./utilities.js";
 
 const form = document.querySelector("form");
 const addUserBtn = document.querySelector("#add-user-btn");
+
+const userListSection = document.querySelector("#user-list-section");
+const userListElem = document.querySelector("#user-list");
+
 const nameInputElem = document.querySelector("#name-input");
 const emailInputElem = document.querySelector("#email-input");
-
-let arrInLocalStorage = getFromStorage("todoArr") ?? [];
 
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    storeInfo();
-    clearInput();
+    if (findDuplicate()) {
+        alert("Please enter a different name or email");
+        return;
+    } else {
+        storeInfo();
+        incrementCount();
+        displayUser();
+        clearInput();
+    }
 
-    function storeInfo() {
-        const obj = {};
+    //checks if user has typed in name or email previously
+    function findDuplicate() {
+        const listInLocalStorage = getListFromStorage();
 
-        //alerts user if they've typed in the name or email previously
-        if (arrInLocalStorage) {
-            for (const obj of arrInLocalStorage) {
+        if (listInLocalStorage.length > 0) {
+            for (const obj of listInLocalStorage) {
                 const { name, email } = obj;
 
                 if (
                     name === nameInputElem.value ||
                     email === emailInputElem.value
                 ) {
-                    alert("Please enter a different name or email");
-                    return;
+                    return true;
+                } else {
+                    return false;
                 }
             }
         }
+    }
+
+    function storeInfo() {
+        const obj = {};
+        let listInLocalStorage = getListFromStorage();
 
         //populates array that will be stored in local storage
         if (nameInputElem.value && emailInputElem.value) {
-            obj.name = nameInputElem.value;
-            obj.email = emailInputElem.value;
+            obj.name = nameInputElem.value.trim();
+            obj.email = emailInputElem.value.trim();
 
-            arrInLocalStorage = [...arrInLocalStorage, obj];
+            listInLocalStorage = [...listInLocalStorage, obj];
         }
 
-        if (arrInLocalStorage.length > 0) {
-            localStorage.setItem("todoArr", JSON.stringify(arrInLocalStorage));
+        if (listInLocalStorage.length > 0) {
+            localStorage.setItem("todoArr", JSON.stringify(listInLocalStorage));
         }
+    }
+
+    function incrementCount() {
+        const userCountElem = document.querySelector("#user-count");
+        const userCountText = document.querySelector("#user-count-text");
+
+        const updatedCount = ++userCountObj.value;
+
+        //store count in local storage and update it on the page
+        localStorage.setItem("userCount", updatedCount);
+        userCountElem.textContent = updatedCount;
+
+        //update the count text
+        if (updatedCount === 1) {
+            userCountText.textContent = "User";
+        } else {
+            userCountText.textContent = "Users";
+        }
+    }
+
+    function displayUser() {
+        const getLastUser = () => userListElem.lastElementChild;
+
+        //display the markup which has 1 info div by default
+        if (getListFromStorage().length === 1) {
+            userListElem.classList.remove("display-none");
+        } else {
+            const lastUserClone = getLastUser().cloneNode(true);
+            userListElem.appendChild(lastUserClone);
+        }
+
+        //update the last name and email on the page
+        getLastUser().querySelector(".name").textContent = nameInputElem.value;
+        getLastUser().querySelector(".email").textContent =
+            emailInputElem.value;
     }
 
     function clearInput() {
@@ -49,11 +99,3 @@ form.addEventListener("submit", (e) => {
         emailInputElem.value = "";
     }
 });
-
-/*
-GIOTAP
-
-GOAL: When user clicks on “add user”, display name and email on screen
-
-
-*/
