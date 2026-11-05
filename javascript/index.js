@@ -1,7 +1,14 @@
-import { getListFromStorage, userCountObj } from "./utilities.js";
+import {
+    getLastUser,
+    getListFromStorage,
+    updateCountText,
+    userCountObj,
+} from "./utilities.js";
 
 const form = document.querySelector("form");
 const addUserBtn = document.querySelector("#add-user-btn");
+
+const userCountElem = document.querySelector("#user-count");
 
 const userListSection = document.querySelector("#user-list-section");
 const userListElem = document.querySelector("#user-list");
@@ -9,6 +16,7 @@ const userListElem = document.querySelector("#user-list");
 const nameInputElem = document.querySelector("#name-input");
 const emailInputElem = document.querySelector("#email-input");
 
+//CREATE NEW USER
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -30,14 +38,10 @@ form.addEventListener("submit", (e) => {
             for (const obj of listInLocalStorage) {
                 const { name, email } = obj;
 
-                if (
-                    name === nameInputElem.value ||
+                return name === nameInputElem.value ||
                     email === emailInputElem.value
-                ) {
-                    return true;
-                } else {
-                    return false;
-                }
+                    ? true
+                    : false;
             }
         }
     }
@@ -60,7 +64,6 @@ form.addEventListener("submit", (e) => {
     }
 
     function incrementCount() {
-        const userCountElem = document.querySelector("#user-count");
         const userCountText = document.querySelector("#user-count-text");
 
         const updatedCount = ++userCountObj.value;
@@ -70,16 +73,10 @@ form.addEventListener("submit", (e) => {
         userCountElem.textContent = updatedCount;
 
         //update the count text
-        if (updatedCount === 1) {
-            userCountText.textContent = "User";
-        } else {
-            userCountText.textContent = "Users";
-        }
+        updateCountText(updatedCount);
     }
 
     function displayUser() {
-        const getLastUser = () => userListElem.lastElementChild;
-
         //display the markup which has 1 info div by default
         if (getListFromStorage().length === 1) {
             userListElem.classList.remove("display-none");
@@ -97,5 +94,57 @@ form.addEventListener("submit", (e) => {
     function clearInput() {
         nameInputElem.value = "";
         emailInputElem.value = "";
+    }
+});
+
+//DISPLAY USERS IN LOCAL STORAGE
+document.addEventListener("DOMContentLoaded", (e) => {
+    displayCount();
+    displayList();
+
+    function displayCount() {
+        const storedCount = userCountObj.value;
+
+        //update the count and count text
+        userCountElem.textContent = storedCount;
+        updateCountText(storedCount);
+    }
+
+    function displayList(params) {
+        const listInLocalStorage = getListFromStorage();
+
+        if (getListFromStorage().length === 1) {
+            const { name, email } = listInLocalStorage[0];
+
+            userListElem.classList.remove("display-none");
+
+            getLastUser().querySelector(".name").textContent = name;
+            getLastUser().querySelector(".email").textContent = email;
+        }
+
+        if (getListFromStorage().length > 1) {
+            const listOfElements = listInLocalStorage.map((obj) => {
+                const { name, email } = obj;
+
+                return `
+            <li>
+                <article>
+                    <div>
+                        <p class="name">${name}</p>
+                        <p class="email">${email}</p>
+                    </div>
+
+                    <div>
+                        <button type="button">Edit</button>
+                        <button type="button">Delete</button>
+                    </div>
+                </article>
+            </li>
+            `;
+            });
+
+            userListElem.innerHTML = listOfElements.join("");
+            userListElem.classList.remove("display-none");
+        }
     }
 });
