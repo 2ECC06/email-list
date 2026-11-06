@@ -3,8 +3,9 @@ import {
     getLastUser,
     getListFromStorage,
     storeArrInLocalStorage,
-    updateCountText,
-    userCountObj,
+    storeCountInLocalStorage,
+    storedCountObj,
+    updateUserText,
 } from "./utilities.js";
 
 const addUserForm = document.querySelector("#add-user-form");
@@ -18,7 +19,6 @@ const closeBtn = document.querySelector("#close-btn");
 
 const userCountElem = document.querySelector("#user-count");
 
-const userListSection = document.querySelector("#user-list-section");
 const userListElem = document.querySelector("#user-list");
 
 const nameInputElem = document.querySelector("#name-input");
@@ -31,7 +31,7 @@ const modalEmailInput = document.querySelector("#modal-email-input");
 addUserForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    if (findDuplicate()) {
+    if (duplicateFound()) {
         alert("Please enter a different name or email");
         return;
     } else {
@@ -42,7 +42,7 @@ addUserForm.addEventListener("submit", (e) => {
     }
 
     //checks if user has typed in name or email previously
-    function findDuplicate() {
+    function duplicateFound() {
         const listInLocalStorage = getListFromStorage();
 
         if (listInLocalStorage.length > 0) {
@@ -78,14 +78,14 @@ addUserForm.addEventListener("submit", (e) => {
     function incrementCount() {
         const userCountText = document.querySelector("#user-count-text");
 
-        const updatedCount = ++userCountObj.value;
+        const updatedCount = ++storedCountObj.value;
 
         //store count in local storage and update it on the page
-        localStorage.setItem("userCount", updatedCount);
+        storeCountInLocalStorage(updatedCount);
         userCountElem.textContent = updatedCount;
 
         //update the count text
-        updateCountText(updatedCount);
+        updateUserText(updatedCount);
     }
 
     function displayUser() {
@@ -117,11 +117,11 @@ document.addEventListener("DOMContentLoaded", (e) => {
     displayList();
 
     function displayCount() {
-        const storedCount = userCountObj.value;
+        const storedCount = storedCountObj.value;
 
         //update the count and count text
         userCountElem.textContent = storedCount;
-        updateCountText(storedCount);
+        updateUserText(storedCount);
     }
 
     function displayList() {
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
 
                     <div>
                         <button type="button" class="edit-btn">Edit</button>
-                        <button type="button" class="edit-btn">Delete</button>
+                        <button type="button" class="delete-btn">Delete</button>
                     </div>
                 </article>
             </li>
@@ -172,9 +172,9 @@ document.addEventListener("click", (e) => {
         const listInLocalStorage = getListFromStorage();
         const userId = e.target.closest("li").dataset.userId;
 
-        const obj = listInLocalStorage.find((obj) => obj.id === userId);
+        const correctObj = listInLocalStorage.find((obj) => obj.id === userId);
 
-        const { name, email } = obj;
+        const { name, email } = correctObj;
 
         //populate modal inputs
         modalNameInput.value = name;
@@ -183,13 +183,11 @@ document.addEventListener("click", (e) => {
         updateUserForm.addEventListener("submit", (e) => {
             e.preventDefault();
 
-            if (modalNameInput.value.toLowerCase().trim() === name) {
-                alert("This name is already in the list!");
-                return;
-            }
-
-            if (modalEmailInput.value.toLowerCase().trim() === email) {
-                alert("This email is already in the list!");
+            if (
+                modalNameInput.value.toLowerCase().trim() === name ||
+                modalEmailInput.value.toLowerCase().trim() === email
+            ) {
+                updateModal.close();
                 return;
             }
 
@@ -227,4 +225,39 @@ document.addEventListener("click", (e) => {
 
 closeBtn.addEventListener("click", (e) => {
     updateModal.close();
+});
+
+//DELETE USER
+document.addEventListener("click", (e) => {
+    if (e.target.className === "delete-btn") {
+        const idOfSelectedElem = e.target.closest("li").dataset.userId;
+
+        decrementCount();
+        removeUser(idOfSelectedElem);
+    }
+
+    function decrementCount() {
+        //decrement 1 in local storage
+        if (confirm("Delete this user?")) {
+            const countMinus1 = --storedCountObj.value;
+
+            //store count in local storage and update it on the page
+            storeCountInLocalStorage(countMinus1);
+            userCountElem.textContent = countMinus1;
+
+            //update the count text
+            updateUserText(countMinus1);
+        }
+    }
+
+    function removeUser(userId) {
+        //remove item from local storage
+        const oldArr = getListFromStorage();
+        const newArr = oldArr.filter((obj) => obj.id !== userId);
+        storeArrInLocalStorage(newArr);
+
+        //remove item from HTML
+        const elementToDelete = e.target.closest("li");
+        elementToDelete.remove();
+    }
 });
