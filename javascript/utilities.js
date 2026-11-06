@@ -1,6 +1,9 @@
 //takes in a key, and returns a js value
 export const getListFromStorage = () =>
-    JSON.parse(localStorage.getItem("todoArr")) ?? [];
+    JSON.parse(localStorage.getItem("userInfo")) ?? [];
+
+export const storeArrInLocalStorage = (arr) =>
+    localStorage.setItem("userInfo", JSON.stringify(arr));
 
 export const userCountObj = {
     value: Number(localStorage.getItem("userCount")) || 0,
@@ -15,3 +18,6 @@ export function updateCountText(count) {
         document.querySelector("#user-count-text").textContent = "Users";
     }
 }
+
+export const capitaliseFirst = (string) =>
+    string.charAt(0).toUpperCase() + string.slice(1);

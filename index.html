@@ -10,10 +10,27 @@
 </head>
 
 <body>
+    <dialog id="update-modal">
+        <form id="update-form">
+            <label>
+                Name
+                <input type="text" name="name" id="modal-name-input" />
+            </label>
+
+            <label>
+                Email
+                <input type="email" name="email" id="modal-email-input" />
+            </label>
+
+            <button id="update-user-btn" type="submit">Save</button>
+            <button id="close-btn" type="button">Close</button>
+        </form>
+    </dialog>
+
     <!-- Add new user section -->
     <section>
         <h2>Add new user</h2>
-        <form>
+        <form id="add-user-form">
             <label>
                 Name
                 <input type="text" name="name" id="name-input" />
@@ -47,7 +64,7 @@
                     </div>
 
                     <div>
-                        <button type="button">Edit</button>
+                        <button type="button" class="edit-btn">Edit</button>
                         <button type="button">Delete</button>
                     </div>
                 </article>
