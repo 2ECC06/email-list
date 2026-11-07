@@ -49,7 +49,7 @@ addUserForm.addEventListener("submit", (e) => {
             for (const obj of listInLocalStorage) {
                 const { name, email } = obj;
 
-                return name === nameInputElem.value ||
+                return name === capitaliseFirst(nameInputElem.value) ||
                     email === emailInputElem.value
                     ? true
                     : false;
@@ -63,7 +63,7 @@ addUserForm.addEventListener("submit", (e) => {
 
         //populates array that will be stored in local storage
         if (nameInputElem.value && emailInputElem.value) {
-            obj.id = String(Math.floor(Math.random() * 100 + 1));
+            obj.id = String(Math.floor(Math.random() * 101 + 10));
             obj.name = capitaliseFirst(nameInputElem.value.trim());
             obj.email = emailInputElem.value.trim();
 
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
     function displayList() {
         const listInLocalStorage = getListFromStorage();
 
-        if (getListFromStorage().length === 1) {
+        if (listInLocalStorage.length === 1) {
             const { id, name, email } = listInLocalStorage[0];
 
             userListElem.classList.remove("display-none");
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
             getLastUser().querySelector(".email").textContent = email;
         }
 
-        if (getListFromStorage().length > 1) {
+        if (listInLocalStorage.length > 1) {
             const listOfElements = listInLocalStorage.map((obj) => {
                 const { id, name, email } = obj;
 
@@ -167,26 +167,35 @@ document.addEventListener("DOMContentLoaded", (e) => {
 //UPDATE USER
 document.addEventListener("click", (e) => {
     if (e.target.className === "edit-btn") {
-        updateModal.showModal();
-
         const listInLocalStorage = getListFromStorage();
         const userId = e.target.closest("li").dataset.userId;
+        const objToUpdate = listInLocalStorage.find((obj) => obj.id === userId);
+        const { name, email } = objToUpdate;
 
-        const correctObj = listInLocalStorage.find((obj) => obj.id === userId);
+        updateModal.showModal();
+        populateInputs();
 
-        const { name, email } = correctObj;
-
-        //populate modal inputs
-        modalNameInput.value = name;
-        modalEmailInput.value = email;
+        function populateInputs() {
+            //populate modal inputs
+            modalNameInput.value = name;
+            modalEmailInput.value = email;
+        }
 
         updateUserForm.addEventListener("submit", (e) => {
             e.preventDefault();
 
-            if (
-                modalNameInput.value.toLowerCase().trim() === name ||
-                modalEmailInput.value.toLowerCase().trim() === email
-            ) {
+            let nameChanged = false;
+            let emailChanged = false;
+
+            if (capitaliseFirst(modalNameInput.value.trim()) !== name) {
+                nameChanged = true;
+            }
+
+            if (modalEmailInput.value.trim() !== email) {
+                emailChanged = true;
+            }
+
+            if (!nameChanged && !emailChanged) {
                 updateModal.close();
                 return;
             }
@@ -196,28 +205,30 @@ document.addEventListener("click", (e) => {
             updateModal.close();
 
             function updateLocalStorage() {
-                for (let obj of listInLocalStorage) {
-                    if (obj.id === userId) {
-                        obj.name = capitaliseFirst(modalNameInput.value.trim());
-                        obj.email = modalEmailInput.value.trim();
-                        break;
-                    }
-                }
+                if (nameChanged)
+                    objToUpdate.name = capitaliseFirst(
+                        modalNameInput.value.trim(),
+                    );
+
+                if (emailChanged)
+                    objToUpdate.email = modalEmailInput.value.trim();
 
                 storeArrInLocalStorage(listInLocalStorage);
             }
 
             function updateHTML() {
-                const listItems = document.querySelectorAll("li");
+                const listElements = document.querySelectorAll("li");
 
-                const correctLiElem = [...listItems].find(
-                    (li) => userId === li.dataset.userId,
+                const correctLiElem = [...listElements].find(
+                    (li) => li.dataset.userId === userId,
                 );
 
-                correctLiElem.querySelector(".name").textContent =
-                    modalNameInput.value;
-                correctLiElem.querySelector(".email").textContent =
-                    modalEmailInput.value;
+                const { name, email } = listInLocalStorage.find(
+                    (obj) => obj.id === userId,
+                );
+
+                correctLiElem.querySelector(".name").textContent = name;
+                correctLiElem.querySelector(".email").textContent = email;
             }
         });
     }
@@ -245,7 +256,7 @@ document.addEventListener("click", (e) => {
             storeCountInLocalStorage(countMinus1);
             userCountElem.textContent = countMinus1;
 
-            //update the count text
+            //update the "users" count text
             updateUserText(countMinus1);
         }
     }
@@ -256,8 +267,23 @@ document.addEventListener("click", (e) => {
         const newArr = oldArr.filter((obj) => obj.id !== userId);
         storeArrInLocalStorage(newArr);
 
-        //remove item from HTML
-        const elementToDelete = e.target.closest("li");
-        elementToDelete.remove();
+        const listElements = document.querySelectorAll("li");
+
+        //if there's only 1 element remaining on the page, don't delete it from the HTML. Rather, clear it's info and hide the list
+        if (listElements.length === 1) {
+            const lastItem = listElements[0];
+
+            //remove data
+            lastItem.removeAttribute("data-user-id");
+            lastItem.querySelector(".name").textContent = "";
+            lastItem.querySelector(".email").textContent = "";
+
+            //hide list
+            userListElem.classList.add("display-none");
+        } else {
+            //remove item from HTML
+            const elementToDelete = e.target.closest("li");
+            elementToDelete.remove();
+        }
     }
 });
