@@ -81,6 +81,12 @@
         display: grid;
         row-gap: 20px;
     }
+
+    @media (min-width: 1024px) {
+        #new-user-section {
+            justify-items: center;
+        }
+    }
 }
 
 @layer content {
@@ -98,29 +104,28 @@
         font-size: clamp(2rem, 0.833vw + 1.833rem, 2.5rem);
     }
 
-    /* lssrs: get this looking good */
     #add-user-form {
-        padding: 20px 12px 20px;
+        padding: 22px 14px 24px;
         display: grid;
         place-items: center;
         row-gap: 32px;
         background-color: white;
-        border-radius: 16px;
-        border: 4px solid;
-    }
-
-    .new-user-label {
-        width: 100%;
-        font-size: var(--font-size-20);
-        font-weight: var(--medium);
+        border-radius: 20px;
+        border: 4.5px solid;
+        width: min(100%, 900px);
     }
 
     .label-and-input {
         width: 100%;
     }
 
+    .new-user-label {
+        font-size: var(--font-size-20);
+        font-weight: var(--medium);
+    }
+
     .label-and-input input {
-        height: 40px;
+        height: 48px;
         background-color: var(--grey);
         border-radius: 8px;
         border: 2px solid;
@@ -134,15 +139,15 @@
     /* large screens */
     @media (min-width: 1024px) {
         #add-user-form {
-            padding: 32px 20px 20px;
+            padding: 32px 20px;
         }
         .new-user-label {
             font-size: var(--font-size-24);
         }
 
-        .new-user-label input {
+        .label-and-input input {
             font-size: var(--font-size-20);
-            height: 48px;
+            height: 52px;
         }
     }
 }
@@ -150,14 +155,29 @@
 @layer components {
     button {
         width: 100%;
-        height: 48px;
-        border-radius: 8px;
+        height: 56px;
+        border-radius: 16px;
         border: none;
         background-color: var(--yellow);
         text-align: center;
-        font-size: 20px;
+        font-size: 24px;
         font-weight: var(--bold);
-        box-shadow: 0 12px;
+        box-shadow: 0 12px 0 -0.5px;
+    }
+
+    @media (min-width: 1024px) {
+        button {
+            font-size: 32px;
+            height: 68px;
+            box-shadow: 0 15px 0 -0.5px;
+            cursor: pointer;
+        }
+
+        button:active {
+            box-shadow: 0 5px 0 -0.5px;
+            transition: all 0.05s ease-in;
+            transform: translateY(5px);
+        }
     }
 }
 
