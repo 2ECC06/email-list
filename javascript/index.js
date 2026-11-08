@@ -11,10 +11,8 @@ import {
 const addUserForm = document.querySelector("#add-user-form");
 
 const updateUserForm = document.querySelector("#update-form");
-const addUserBtn = document.querySelector("#add-user-btn");
 
 const updateModal = document.querySelector("#update-modal");
-const updateUserBtn = document.querySelector("#update-user-btn");
 const closeBtn = document.querySelector("#close-btn");
 
 const userCountElem = document.querySelector("#user-count");
@@ -167,6 +165,8 @@ document.addEventListener("DOMContentLoaded", (e) => {
 //UPDATE USER
 document.addEventListener("click", (e) => {
     if (e.target.className === "edit-btn") {
+        updateModal.showModal();
+        return;
         const listInLocalStorage = getListFromStorage();
         const userId = e.target.closest("li").dataset.userId;
         const objToUpdate = listInLocalStorage.find((obj) => obj.id === userId);

@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Trispace:wght@100..800&display=swap");
 
-@layer reset, theme, layout, content, components, utility;
+@layer reset, theme, layout, components, content, utility;
 
 @layer reset {
     * {
@@ -21,6 +21,7 @@
         --turquoise: #1dd3b0;
         --grey: #c1c1c1;
         --yellow: #ffdd00;
+        --pink: #fb89cb;
 
         /* font-sizes (naming in pixels, values in rem) */
         --font-size-4: 0.25rem;
@@ -96,6 +97,16 @@
         font-family: "Trispace", sans-serif;
     }
 
+    #update-modal {
+        position: fixed;
+        inset: 0;
+        margin: auto;
+    }
+
+    #update-modal::backdrop {
+        background-color: rgba(10, 12, 13, 0.8);
+    }
+
     input {
         letter-spacing: 1px;
     }
@@ -104,27 +115,47 @@
         font-size: clamp(2rem, 0.833vw + 1.833rem, 2.5rem);
     }
 
+    #update-modal,
     #add-user-form {
         padding: 22px 14px 24px;
-        display: grid;
-        place-items: center;
-        row-gap: 32px;
         background-color: white;
         border-radius: 20px;
         border: 4.5px solid;
+    }
+
+    #update-modal {
+        width: clamp(300px, 80vw, 1000px);
+    }
+
+    #add-user-form {
         width: min(100%, 900px);
     }
 
-    .label-and-input {
-        width: 100%;
+    #update-form,
+    #add-user-form {
+        display: grid;
+        row-gap: 32px;
+        justify-items: stretch;
+        align-items: center;
     }
 
-    .new-user-label {
+    #update-form #buttons-cont {
+        display: grid;
+        row-gap: 24px;
+    }
+
+    #close-btn {
+        background-color: var(--pink);
+    }
+
+    #update-form label,
+    #add-user-form label {
         font-size: var(--font-size-20);
         font-weight: var(--medium);
     }
 
-    .label-and-input input {
+    #update-form input,
+    #add-user-form input {
         height: 48px;
         background-color: var(--grey);
         border-radius: 8px;
@@ -138,16 +169,35 @@
 
     /* large screens */
     @media (min-width: 1024px) {
+        #update-modal,
         #add-user-form {
-            padding: 32px 20px;
+            padding: 24px 20px 32px;
         }
-        .new-user-label {
+
+        #update-form label {
+            font-size: var(--font-size-28);
+        }
+
+        #update-form input {
             font-size: var(--font-size-24);
         }
 
-        .label-and-input input {
-            font-size: var(--font-size-20);
-            height: 52px;
+        #update-form input {
+            height: 68px;
+            border-width: 3px;
+        }
+
+        #add-user-form {
+            border-width: 6px;
+        }
+
+        #add-user-form :is(label, input) {
+            font-size: var(--font-size-24);
+        }
+
+        #add-user-form input {
+            height: 60px;
+            border-width: 3px;
         }
     }
 }
@@ -162,13 +212,13 @@
         text-align: center;
         font-size: 24px;
         font-weight: var(--bold);
-        box-shadow: 0 12px 0 -0.5px;
+        box-shadow: 0 12px 0 -0.5px black;
     }
 
     @media (min-width: 1024px) {
         button {
             font-size: 32px;
-            height: 68px;
+            height: 76px;
             box-shadow: 0 15px 0 -0.5px;
             cursor: pointer;
         }
