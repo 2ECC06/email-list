@@ -26,9 +26,9 @@ export const getLastUser = () =>
 
 export function updateUserText(userCount) {
     if (userCount === 1) {
-        document.querySelector("#user-count-text").textContent = "User";
+        document.querySelector("#user-count-text").textContent = "user";
     } else {
-        document.querySelector("#user-count-text").textContent = "Users";
+        document.querySelector("#user-count-text").textContent = "users";
     }
 }
 
