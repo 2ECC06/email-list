@@ -140,14 +140,14 @@ document.addEventListener("DOMContentLoaded", (e) => {
                 const { id, name, email } = obj;
 
                 return `
-            <li data-user-id=${id}>
-                <article>
-                    <div>
+            <li data-user-id=${id} class="list-item">
+                <article class="cont">
+                    <div class="user-info">
                         <p class="name">${name}</p>
                         <p class="email">${email}</p>
                     </div>
 
-                    <div>
+                    <div id="edit-and-delete">
                         <button type="button" class="edit-btn">Edit</button>
                         <button type="button" class="delete-btn">Delete</button>
                     </div>
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
 document.addEventListener("click", (e) => {
     if (e.target.className === "edit-btn") {
         updateModal.showModal();
-        return;
+
         const listInLocalStorage = getListFromStorage();
         const userId = e.target.closest("li").dataset.userId;
         const objToUpdate = listInLocalStorage.find((obj) => obj.id === userId);
