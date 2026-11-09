@@ -95,6 +95,13 @@
     border: 4.5px solid;
 }
 
+#delete-all-btn {
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+    box-shadow: none;
+}
+
 @media (min-width: 1024px) {
     #update-modal,
     #add-user-form {
@@ -260,7 +267,7 @@
 }
 
 @layer components {
-    button:not(#delete-all-btn) {
+    button {
         width: 100%;
         height: 56px;
         border-radius: 20px;
