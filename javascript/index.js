@@ -2,28 +2,31 @@ import {
     capitaliseFirst,
     getLastUser,
     getListFromStorage,
+    hideLastElem,
     storeArrInLocalStorage,
     storeCountInLocalStorage,
     storedCountObj,
     updateUserText,
 } from "./utilities.js";
 
+const modalNameInput = document.querySelector("#modal-name-input");
+const modalEmailInput = document.querySelector("#modal-email-input");
+
 const addUserForm = document.querySelector("#add-user-form");
 
+const userCountElem = document.querySelector("#user-count");
+
 const updateUserForm = document.querySelector("#update-form");
+
+const userListElem = document.querySelector("#user-list");
 
 const updateModal = document.querySelector("#update-modal");
 const closeBtn = document.querySelector("#close-btn");
 
-const userCountElem = document.querySelector("#user-count");
-
-const userListElem = document.querySelector("#user-list");
-
 const nameInputElem = document.querySelector("#name-input");
 const emailInputElem = document.querySelector("#email-input");
 
-const modalNameInput = document.querySelector("#modal-name-input");
-const modalEmailInput = document.querySelector("#modal-email-input");
+const deleteAllBtn = document.querySelector("#delete-all-btn");
 
 //CREATE NEW USER
 addUserForm.addEventListener("submit", (e) => {
@@ -76,7 +79,7 @@ addUserForm.addEventListener("submit", (e) => {
     function incrementCount() {
         const userCountText = document.querySelector("#user-count-text");
 
-        const updatedCount = ++storedCountObj.value;
+        const updatedCount = storedCountObj.getUserCount() + 1;
 
         //store count in local storage and update it on the page
         storeCountInLocalStorage(updatedCount);
@@ -115,7 +118,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
     displayList();
 
     function displayCount() {
-        const storedCount = storedCountObj.value;
+        const storedCount = storedCountObj.getUserCount();
 
         //update the count and count text
         userCountElem.textContent = storedCount;
@@ -243,22 +246,22 @@ document.addEventListener("click", (e) => {
     if (e.target.className === "delete-btn") {
         const idOfSelectedElem = e.target.closest("li").dataset.userId;
 
-        decrementCount();
-        removeUser(idOfSelectedElem);
+        if (confirm("Delete this user?")) {
+            decrementCount();
+            removeUser(idOfSelectedElem);
+        }
     }
 
     function decrementCount() {
         //decrement 1 in local storage
-        if (confirm("Delete this user?")) {
-            const countMinus1 = --storedCountObj.value;
+        const countMinus1 = storedCountObj.getUserCount() - 1;
 
-            //store count in local storage and update it on the page
-            storeCountInLocalStorage(countMinus1);
-            userCountElem.textContent = countMinus1;
+        //store count in local storage and update it on the page
+        storeCountInLocalStorage(countMinus1);
+        userCountElem.textContent = countMinus1;
 
-            //update the "users" count text
-            updateUserText(countMinus1);
-        }
+        //update the "users" count text
+        updateUserText(countMinus1);
     }
 
     function removeUser(userId) {
@@ -271,19 +274,44 @@ document.addEventListener("click", (e) => {
 
         //if there's only 1 element remaining on the page, don't delete it from the HTML. Rather, clear it's info and hide the list
         if (listElements.length === 1) {
-            const lastItem = listElements[0];
-
-            //remove data
-            lastItem.removeAttribute("data-user-id");
-            lastItem.querySelector(".name").textContent = "";
-            lastItem.querySelector(".email").textContent = "";
-
-            //hide list
-            userListElem.classList.add("display-none");
+            hideLastElem();
         } else {
             //remove item from HTML
             const elementToDelete = e.target.closest("li");
             elementToDelete.remove();
         }
+    }
+});
+
+deleteAllBtn.addEventListener("click", (e) => {
+    if (getListFromStorage().length > 0) {
+        if (confirm("This action will delete ALL users")) {
+            const listElements = document.querySelectorAll("li");
+
+            storeArrInLocalStorage([]);
+            updateCount();
+            updateHTML();
+
+            function updateCount() {
+                userCountElem.textContent = 0;
+                storeCountInLocalStorage(0);
+
+                if (getListFromStorage().length === 1) {
+                    //ensures that the user text is changed from "1 user" to "0 users"
+                    updateUserText(0);
+                }
+            }
+
+            function updateHTML() {
+                //delete all elements on the page excluding the first 1
+                listElements.forEach((liElem, index) => {
+                    if (index > 0) liElem.remove();
+                });
+
+                hideLastElem();
+            }
+        }
+    } else {
+        alert("There are no users to delete!!!");
     }
 });

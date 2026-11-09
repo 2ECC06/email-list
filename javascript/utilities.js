@@ -19,7 +19,7 @@ export const storeCountInLocalStorage = (userCount) => {
 };
 
 export const storedCountObj = {
-    value: Number(localStorage.getItem("userCount")) || 0,
+    getUserCount: () => Number(localStorage.getItem("userCount") || 0),
 };
 export const getLastUser = () =>
     document.querySelector("#user-list").lastElementChild;
@@ -46,3 +46,17 @@ export const capitaliseFirst = (string) => {
         return string;
     }
 };
+
+//resets the HTML to the default state when there's only 1 list element left on the page
+export function hideLastElem() {
+    const lastItem = document.querySelector("li");
+
+    //remove data
+    lastItem.removeAttribute("data-user-id");
+    lastItem.querySelector(".name").textContent = "";
+    lastItem.querySelector(".email").textContent = "";
+
+    //hide list
+    const userListElem = document.querySelector("#user-list");
+    userListElem.classList.add("display-none");
+}
