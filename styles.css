@@ -68,25 +68,41 @@
         padding: 60px 0;
     }
 
-    #user-list-section {
-        border: 2px solid;
-    }
-
     #main-cont {
         display: grid;
-        row-gap: 40px;
-        width: clamp(280px, 80%, 1100px);
+        row-gap: 80px;
+        width: clamp(280px, 80%, 1200px);
     }
 
     #new-user-section {
         display: grid;
-        row-gap: 20px;
+        row-gap: 32px;
     }
 
     @media (min-width: 1024px) {
         #new-user-section {
             justify-items: center;
         }
+    }
+}
+
+#update-modal,
+#add-user-form,
+.list-item {
+    padding: 22px 14px 24px;
+    background-color: white;
+    border-radius: 20px;
+    border: 4.5px solid;
+}
+
+@media (min-width: 1024px) {
+    #update-modal,
+    #add-user-form {
+        padding: 24px 20px 32px;
+    }
+
+    .list-item {
+        padding: 20px;
     }
 }
 
@@ -113,14 +129,6 @@
 
     h2 {
         font-size: clamp(2rem, 0.833vw + 1.833rem, 2.5rem);
-    }
-
-    #update-modal,
-    #add-user-form {
-        padding: 22px 14px 24px;
-        background-color: white;
-        border-radius: 20px;
-        border: 4.5px solid;
     }
 
     #update-modal {
@@ -167,13 +175,36 @@
         margin-top: 12px;
     }
 
+    #user-list-section {
+        display: grid;
+        row-gap: 28px;
+    }
+
+    /* lssrs */
+    #user-list-section header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #count-cont {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-radius: 30px;
+        font-size: clamp(1rem, 0.682vw + 0.864rem, 1.375rem);
+        padding: 0.4em 0.6em;
+        background-color: #009e7f;
+        color: white;
+    }
+
+    #user-list {
+        display: grid;
+        row-gap: 20px;
+    }
+
     /* large screens */
     @media (min-width: 1024px) {
-        #update-modal,
-        #add-user-form {
-            padding: 24px 20px 32px;
-        }
-
         #update-form label {
             font-size: var(--font-size-28);
         }
@@ -206,13 +237,61 @@
     button {
         width: 100%;
         height: 56px;
-        border-radius: 16px;
+        border-radius: 20px;
         border: none;
         background-color: var(--yellow);
         text-align: center;
         font-size: 24px;
         font-weight: var(--bold);
         box-shadow: 0 12px 0 -0.5px black;
+    }
+
+    button:active {
+        box-shadow: 0 5px 0 -0.5px;
+        transition: all 0.1s ease-out;
+        transform: translateY(5px);
+    }
+
+    .list-item {
+        list-style: none;
+        display: grid;
+        justify-items: stretch;
+        align-items: center;
+    }
+
+    .list-item .cont {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .user-info {
+        display: grid;
+        row-gap: 8px;
+    }
+
+    .list-item .name {
+        font-size: clamp(1.5rem, 0.909vw + 1.318rem, 2rem);
+        font-weight: var(--medium);
+    }
+
+    .list-item .email {
+        font-size: clamp(1rem, 0.909vw + 0.818rem, 1.5rem);
+        color: #615f5f;
+    }
+
+    #edit-and-delete {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    #edit-and-delete button {
+        height: 48px;
+    }
+
+    .delete-btn {
+        background-color: var(--pink);
     }
 
     @media (min-width: 1024px) {
@@ -223,10 +302,26 @@
             cursor: pointer;
         }
 
-        button:active {
-            box-shadow: 0 5px 0 -0.5px;
-            transition: all 0.05s ease-in;
-            transform: translateY(5px);
+        .list-item {
+            border-width: 6px;
+            height: 140px;
+            padding-bottom: 16px;
+        }
+
+        .list-item .cont {
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        #edit-and-delete {
+            flex-direction: row;
+            align-items: center;
+        }
+
+        #edit-and-delete button {
+            height: 60px;
+            padding: 16px 28px;
+            font-size: 28px;
         }
     }
 }

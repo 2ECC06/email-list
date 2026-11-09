@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Email list</title>
     <link rel="stylesheet" href="styles.css" />
-    <script defer src="javascript/index.js" type="module"></script>
+    <!-- <script defer src="javascript/index.js" type="module"></script> -->
 </head>
 
 <body>
@@ -50,23 +50,23 @@
 
         <!-- User list section -->
         <section id="user-list-section">
-            <div>
+            <header>
                 <h2>User List</h2>
-                <div>
+                <div id="count-cont">
                     <span id="user-count">0</span>
                     <span id="user-count-text">Users</span>
                 </div>
-            </div>
+            </header>
 
             <ul id="user-list">
-                <li>
-                    <article>
-                        <div>
-                            <p class="name"></p>
-                            <p class="email"></p>
+                <li class="list-item">
+                    <article class="cont">
+                        <div class="user-info">
+                            <p class="name">Ethan</p>
+                            <p class="email">ethanobott6002@gmail.com</p>
                         </div>
 
-                        <div>
+                        <div id="edit-and-delete">
                             <button type="button" class="edit-btn">
                                 Edit
                             </button>
