@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Trispace:wght@100..800&display=swap");
 
-@layer reset, theme, layout, components, content, utility;
+@layer reset, theme, layout, content, component, utility;
 
 @layer reset {
     * {
@@ -12,6 +12,17 @@
     html,
     body {
         min-height: 100vh;
+    }
+
+    body,
+    button,
+    input {
+        font-family: "Trispace", sans-serif;
+    }
+
+    button {
+        border: none;
+        cursor: pointer;
     }
 }
 
@@ -86,38 +97,18 @@
     }
 }
 
-#update-modal,
-#add-user-form,
-.list-item {
-    padding: 22px 14px 24px;
-    background-color: white;
-    border-radius: 20px;
-    border: 4.5px solid;
-}
+@layer content {
+    #update-modal,
+    #add-user-form,
+    .list-item {
+        background-color: white;
+        border-radius: 20px;
+        border: 4.5px solid;
+    }
 
-#delete-all-btn {
-    width: fit-content;
-    height: fit-content;
-    background-color: transparent;
-    box-shadow: none;
-}
-
-@media (min-width: 1024px) {
     #update-modal,
     #add-user-form {
-        padding: 24px 20px 32px;
-    }
-
-    .list-item {
-        padding: 20px;
-    }
-}
-
-@layer content {
-    body,
-    button,
-    input {
-        font-family: "Trispace", sans-serif;
+        padding: 20px 16px 28px;
     }
 
     #update-modal {
@@ -142,6 +133,16 @@
         background-color: var(--yellow);
     }
 
+    #add-user-btn,
+    #edit-and-delete button,
+    #update-modal-buttons button {
+        box-shadow: 0 12px 0 -0.5px black;
+        border-radius: 20px;
+        font-size: 24px;
+        text-align: center;
+        font-weight: var(--bold);
+    }
+
     #update-modal {
         width: clamp(300px, 80vw, 1000px);
     }
@@ -158,9 +159,14 @@
         align-items: center;
     }
 
-    #update-form #buttons-cont {
-        display: grid;
+    #update-modal-buttons {
+        display: flex;
+        flex-direction: column;
         row-gap: 24px;
+    }
+
+    #update-modal-buttons button {
+        height: 50px;
     }
 
     #close-btn {
@@ -186,6 +192,22 @@
         margin-top: 12px;
     }
 
+    #add-user-btn {
+        width: 100%;
+        height: 56px;
+    }
+
+    :is(
+        #add-user-btn,
+        #update-modal-buttons button,
+        #edit-and-delete button,
+        #delete-all-btn:hover
+    ):hover {
+        box-shadow: 0 5px 0 -0.5px;
+        transition: all 0.2s ease-out;
+        transform: translateY(5px);
+    }
+
     #user-list-section {
         display: grid;
         row-gap: 28px;
@@ -194,7 +216,7 @@
     #user-list-section header {
         display: flex;
         justify-content: space-between;
-        align-items: start;
+        align-items: end;
     }
 
     #count-cont {
@@ -211,20 +233,23 @@
     }
 
     #delete-all-btn {
+        background-color: white;
+        box-shadow: 0 8px 0 0 black;
         display: grid;
-        transform: translateY(clamp(-0.625rem, -1.023vw + 0.142rem, -0.062rem));
-        border: none;
-        border-radius: 50%;
+        transform: 2px;
+        border-radius: 12px;
+        padding: 9px;
     }
 
-    #delete-all-btn :hover {
-        scale: 1.2;
+    #delete-all-btn:hover {
+        transform: translateY(1px);
     }
 
     #delete-all-btn img {
-        width: clamp(2.5rem, 1.705vw + 2.159rem, 3.438rem);
-        cursor: pointer;
+        width: 30px;
+        height: 26px;
         transition: all 0.3s ease-in-out;
+        transform: translateX(0.85px);
     }
 
     #user-list {
@@ -234,6 +259,11 @@
 
     /* large screens */
     @media (min-width: 1024px) {
+        #update-modal,
+        #add-user-form {
+            padding: 24px 20px 32px;
+        }
+
         #update-form label {
             font-size: var(--font-size-28);
         }
@@ -245,6 +275,22 @@
         #update-form input {
             height: 68px;
             border-width: 3px;
+        }
+
+        #update-modal-buttons {
+            flex-direction: row;
+            column-gap: 12px;
+        }
+
+        #update-modal-buttons button {
+            width: 100%;
+            height: 60px;
+            font-size: var(--font-size-28);
+        }
+
+        #add-user-btn,
+        #edit-and-delete button {
+            box-shadow: 0 15px 0 -0.5px;
         }
 
         #add-user-form {
@@ -260,6 +306,11 @@
             border-width: 3px;
         }
 
+        #add-user-btn {
+            height: 76px;
+            font-size: 32px;
+        }
+
         #count-cont {
             margin-top: 32px;
         }
@@ -267,28 +318,12 @@
 }
 
 @layer components {
-    button {
-        width: 100%;
-        height: 56px;
-        border-radius: 20px;
-        border: none;
-        text-align: center;
-        font-size: 24px;
-        font-weight: var(--bold);
-        box-shadow: 0 12px 0 -0.5px black;
-    }
-
-    button:active {
-        box-shadow: 0 5px 0 -0.5px;
-        transition: all 0.1s ease-out;
-        transform: translateY(5px);
-    }
-
     .list-item {
         list-style: none;
         display: grid;
         justify-items: stretch;
         align-items: center;
+        padding: 20px 16px 24px;
     }
 
     .list-item .cont {
@@ -327,17 +362,10 @@
     }
 
     @media (min-width: 1024px) {
-        button {
-            font-size: 32px;
-            height: 76px;
-            box-shadow: 0 15px 0 -0.5px;
-            cursor: pointer;
-        }
-
         .list-item {
+            height: 150px;
             border-width: 6px;
-            height: 140px;
-            padding-bottom: 16px;
+            padding: 20px 20px 16px;
         }
 
         .list-item .cont {
